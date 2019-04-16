@@ -1,0 +1,7 @@
+深入解析Kafka消费者——提交和偏移量
+https://blog.csdn.net/ljheee/article/details/81605754
+
+kafka 通过消费者获取__consumer_offsets topic的元数据内容
+https://blog.csdn.net/qq_36096641/article/details/81583268
+
+
