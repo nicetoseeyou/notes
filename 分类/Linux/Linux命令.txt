@@ -1,0 +1,4 @@
+iptable
+sed
+awk
+core dump
