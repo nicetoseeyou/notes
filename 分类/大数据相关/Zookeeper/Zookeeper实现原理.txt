@@ -1,0 +1,17 @@
+1. 简述 Zookeeper
+
+2. 简述 Zookeeper 部署的时候以多少个实例部署，为什么？
+
+3. Zookeeper 的某个机器挂了，整个集群如何处理
+
+4. Zookeeper 在重新选取 leader 的时候，还可以继续执行事务请求吗
+
+5. 请说一下 Zookeeper 中 leader 的选举算法，即 FastLeaderElection 算法
+
+6. 请说一下为什么会存在 Zookeeper，它可以用在哪里
+
+7. Zookeeper 可以做横向扩展吗？可以通过增加机器可以增加集群的性能吗？
+
+8. Zookeeper 在 YARN 框架中如何实现避免脑裂的？
+
+9. 讲一下zookeeper如何保证数据的一致性

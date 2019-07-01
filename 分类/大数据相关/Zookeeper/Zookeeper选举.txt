@@ -1,0 +1,3 @@
+Zookeeper 如何实现选举
+1. 利用 Zookeeper 的强一致性，所有的客户端同时向 Zookeeper 请求写入临时节点(节点内容是客户端的IP地址)，最终只有一个客户端可以成功写入，成功写入的客户端成为 Leader,其他的客户端会向这个路径注册一个子节点变更的 Watcher，用于监控 Leader 是否存活
+2. 当 Leader 挂了，其他的客户端会收到 Zookeeper 发出的 Event,于是开始重新向 Zookeeper 写入临时节点，重新选举新的 Leader
