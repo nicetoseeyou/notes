@@ -1,0 +1,39 @@
+求笛卡尔集
+
+MapReduce 支持哪些 join，map 端？reduce 端？semi join？semi join 你可以通过什么算法去优化？
+
+MapReduce 实现二次排序
+
+用 MapReduce 实现两表join
+
+用 MapReduce 实现一个存储 kv 数据的文件，对里面的 v 进行全量排序
+
+Map 与 Reduce 任务数量的指定
+
+简述 MapReduce 的工作机制，以及 MapReduce1 与 MapReduce2 的区别？
+
+MapReduce 之间如何选择压缩格式？
+
+MapReduce 的计数器？
+
+简述 MapReduce1 的不足？
+
+简述 MapReduce 的 shuffle 机制？
+
+简述 MapReduce 的 shuffle 机制存在哪些缺陷？
+
+MapReduce 速度较慢？
+
+Combiner() 函数何时被使用？
+
+reduce() 函数如何知道从哪台机器获取 map 输出？
+
+Hadoop 作业调优？
+
+简述 Hadoop archive
+
+简述 Hadoop 对于小文件的处理方法？
+
+简述 Hadoop 的安全认证
+
+简述 Hadoop 如何衡量两个节点之间的距离。

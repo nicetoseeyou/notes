@@ -1,0 +1,15 @@
+inputFormat
+    MapReduce 的输入是 HDFS 上的文件，首先 InputFormat 将文件解析成一个一个 inputSplit，每一个 InputSplit 由一个 mapper 处理
+
+Map阶段
+    Map分为四个阶段，record reader，map，combiner，partitioner
+    record reader 会将 inputSplit 解析成 key/value 的形式
+    map获得key/value，并进行处理，输出 key/value
+    combiner是本地reducer，主要用于 map 端预聚合，减少网络开销
+    partitioner 将map输出的 key/value 解析成 shard(分片)，每一个 shard 输出到一个 reducer 中，默认情况下，partitioner 会计算 key 的 hash 值然后对 reducer 数量进行取模运算
+
+Reduce分为四个阶段，shuffle, sort，reduce，output
+    shuffle 是将 partitioner 的输出文件拉取到运行 reducer 的本地机器中，然后将这些数据通过排序放入一个大的数据列表中，目的是为了同样 key 值的数据排列在一起
+    reduce 的输入是 key 值，以及key值对应的value的迭代器，reduce对数据进行解析，输出
+    Output format 利用 record reader 将 reduce 的输出写入到 HDFS 上，key/value 以 tab 分隔
+
