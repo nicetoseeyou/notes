@@ -14,11 +14,13 @@ HBase是列式存储，把行式数据库中的一列数据值串在一起存储
 4.4 HBase 以 table（表）、row（行）、column（列）、列族（column family）、列标识符（column qualifier）、单元格（cell）、时间戳（timestamp）组织起来。
 每一行（row）代表一个数据对象，每一行以一个行键（row key）进行唯一标识。行键（row key）也是用来检索记录的主键。
 访问 HBase 的行只有三种方式，通过行键（row key）， 通过行键（row key）的范围（range），全表扫描。
-一个列（row）包含分隔开的列族和列的限定符（column family:column qualifier）。列族（column family）包含一个或者多个列，是表的schema的一部分，必须在使用表之前定义。
+一个列（row）包含分隔开的列族和列的限定符（column family:column qualifier）。
+列族（column family）包含一个或者多个列，是表的schema的一部分，必须在使用表之前定义。同一列族的数据在同一个目录下，每一行是一个原子元素，可以对行加锁。
 每个列都归属于某个列族，列以列族作为前缀，如info:name
 列标识符（column qualifier）是列族中数据的索引，如列族info，那么name的标识符是info:name，也可以是info:tel，列的标识符是可以动态添加、修改删除的，类似key-value的key。
 单元格（cell）由行（row）:列族（column family）:列标识符（row qualifier）:值（value）:版本时间戳（timestamp）组成，有多个版本，最新在最前面。
-时间戳（timestamp）用于区分版本。通过时间戳（timestamp），HBase 的数据有多版本的特点，可以查询历史版本数据。
+时间戳（timestamp）用于区分版本。
+通过时间戳（timestamp），HBase 的数据有多版本的特点，可以查询历史版本数据。
 4.5 HBase 数据文件存储在 HDFS 上，容易实现动态增加节点，容易实现集群拓展。同时支持自动切分数据，实现数据水平拓展。具有很好的拓展性。
 4.6 HBase 的 WAL（write ahead log，预写日志）机制保证数据写入时不会因为集群故障而导致写入数据丢失。同时 HDFS 有数据备份功能，Zookeeper的使用可避免master单点故障。具有可靠性。
 4.7 HBase 采用了读写缓存机制，具有高并发快速读写能力，采用主键定位机制，查询响应在毫秒级别。
