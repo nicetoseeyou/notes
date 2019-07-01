@@ -1,0 +1,30 @@
+请说一下 Spark 的 RDD？
+
+RDD 的五大特性及操作算子特点介绍。
+
+DAG 的生成，划分，task的调度执行
+https://wongxingjun.github.io/2015/05/25/Spark作业调度中stage的划分/
+
+数据本地性原理及如何利用和会存在哪些隐患。
+
+reducebykey，groupbykey 的区别等等类似算子对比
+https://blog.csdn.net/weixin_41804049/article/details/80373741
+
+如何高效使用 mappartition
+https://zhuanlan.zhihu.com/p/41879924
+
+foreachPartition 与 foreach 之间的区别及底层实现原理
+https://mp.weixin.qq.com/s/Pz48-M4FSxGjIt9G9NNzTQ
+https://zhuanlan.zhihu.com/p/54293797
+
+广播变量的原理及演变过程，使用场景，使用广播变量一定划算吗？大变量咋办呢？
+
+累加器的原理及应用场景，累加器使用有陷阱么？
+https://mp.weixin.qq.com/s/xQx3hVgXEEjGUjtlwavZUA
+
+序列化，反序列化，闭包，垃圾回收机制（过期rdd的回收，cache的回收等）
+https://github.com/CrestOfWave/Spark-2.3.1/blob/master/core/AboutContextCleaner.md
+
+checkpoint 如何在 Spark core 应用呢？何种场景适合？
+
+Spark 并行度相关配置

@@ -1,0 +1,33 @@
+Spark 运行架构
+
+Spark运行原理，从提交一个 jar 到最后返回结果，整个过程
+
+Spark 的 stage 划分是怎么实现的？拓扑排序？怎么实现？还有什么算法实现？
+
+Spark rpc，spark2.0为啥舍弃了akka，而用netty?
+
+Spark 的各种 shuffle，与 mapreduce 的对比
+
+Spark 的各种 HA，Master 的 HA，Worker的 HA，Executor 的 HA，driver 的 HA,task 的 HA,在容错的时候对集群或是task有什么影响？
+
+Spark 的内存管理机制，spark1.6前后对比分析
+
+Spark2.0 做出了哪些优化？Tungsten 引擎？CPU 与内存两个方面分别说明
+https://blog.csdn.net/zhong930/article/details/80123485
+
+
+Spark RDD、dataframe、dataset 区别
+
+一个Spark task运行很久，要2个小时，你怎么让它半小时完成？问题定位？问题解决？
+
+Spark里面有哪些参数可以设置？针对各个场景说明
+
+standalone 模式下的 Master 和 Worker，executor，driver，
+YARN模式下的 ResourceManager 和 NodeManager。
+一个Spark应用提交的过程，也即是 driver 和 executor 在集群管理器内部启动的过程，然后就是RPC过程，各个角色的作用。
+
+如何给两者分配合适内存，然后 executor 执行 task 倾斜的表现及如何解决。
+
+如何对 executor 的存活挂掉新增进行监控告警。executor 动态分配表现及带来的问题。
+
+driver 和 executor 的类加载器及加载类的原理及过程，当然包括 RPC，依赖传输，task调度等。

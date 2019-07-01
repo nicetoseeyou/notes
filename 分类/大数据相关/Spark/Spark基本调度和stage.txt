@@ -1,0 +1,59 @@
+1. Spark中划分 stage 为什么以宽依赖为基准？（携程）    117
+
+2. Spark 中的 DAGScheduler 和 TaskScheduler 的区别及任务调度过程？（携程）    117
+DAGScheduler通过DAG分析RDD之间的依赖关系，并将job分成若干个Stage，并且生成TaskSet交给TaskScheduler，
+TaskScheduler负责Task的调度，TaskScheduler会创建TaskSetManager，由TaskSetManager根据RDD的preferedLocation对Task进行资源调度，决定哪个Task运行在哪个Executor上。
+
+3. Spark中的stage必须要等所有父stage执行结束吗？（携程）    117
+对，DAGScheduler会将一个job的各个stage划分成几个调度阶段，每个调度阶段包含若干个stage, DAGScheduler会检查每个调度阶段所依赖的父stage的结果是否可用，如果可用，则提交该调度阶段，如果有任何一个stage的结果不可用，就尝试迭代提交当前不可用的父调度阶段，所有在迭代过程中由于所依赖调度阶段的结果不可用而没有提交成功的调度阶段，都被放到等待队列中，等待将来被提交。
+
+4. 当下游 stage 从上游 stage 拉取数据时，需要上游 stage 保持运行（对等）还是关闭？（携程）    117
+关闭
+
+5. 当上游 stage 关闭时，将数据存储在哪里？（携程）    117
+分为两种情况，对于 FinalStage (某个job的最后一个stage)所对应的任务(ResultTask)，返回给DAGScheduler的是结果本身。
+而中间调度阶段对应的任务ShuffleMapTask返回的是MapStatus对象，MapStatus对象管理了ShuffleMapTask的运算输出结果在Spark存储模块BlockManager的存储信息，下一个调度阶段的任务会根据这些存储信息读取输入数据。
+
+6. Spark的 shuffle 中的 map 输出是否有序（携程）    117
+
+7. Spark的shuffle中的 map 输出结果的处理结构是什么？（携程）    118
+
+8. 说一下 Spark 中的基本工作流程？    162
+
+9. 说一下 Spark 的运行模式？    162
+
+10. RDD 是如何容错的？    163
+
+11. reduce 如何获取 map 任务的输出？    163
+
+12. Spark map 端计算结果缓存处理并简述 appendOnlyMap？    163
+
+13. Spark map 任务如何输出？    163
+
+14. Spark 任务调度模块？    163
+
+15. Spark 的存储管理？    164
+
+16. Spark 的存储管理中的 RDD 持久化？    165
+
+17. Spark 的存储管理中的 shuffle 持久化？    165
+
+18. 说一下 Spark 中的 shuffle 过程？    165
+
+19. 说一下 Spark Streaming？    166
+
+20. 说一下 Spark Streaming支持的输入源有哪些？    167
+
+21. Spark streaming与spark作业的关系？    167
+
+22. Spark Stream优化？    167
+
+23. Spark streaming优点缺点（常问）？    167
+
+24. Spark Streaming的容错处理？    168
+
+25. Spark Stream 与 Storm 的区别    168
+
+26. Spark中 reparation 与 coalesce 的区别？    168
+
+27. Spark中 persist 与 cache 的区别？    168

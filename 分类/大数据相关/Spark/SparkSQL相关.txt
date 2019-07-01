@@ -1,0 +1,6 @@
+
+https://www.infoq.cn/article/three-apache-spark-apis-rdds-dataframes-and-datasets
+常见算子的使用及理解，并行度问题，大小表join，如何广播小表。
+join，group by等数据倾斜如何发现及处理方法，星球里球友应该都知道，不知道回去翻看一下。
+常见的存储格式，parquet，txt，json，orc对比及对性能的影响。
+调优大部分也是针对并行度，文件大小，数据倾斜，task倾斜，内存和cpu合理设置等。
