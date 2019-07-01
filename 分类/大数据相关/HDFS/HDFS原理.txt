@@ -1,0 +1,25 @@
+1. HDFS 的读流程。
+
+    客户端调用open方法向DistributedFileSystem发送读取某个文件的请求
+    DFS为客户端创建inputstream
+    inputstream向NN发出getBlockLocation的请求，获取block所在的DN的位置，NN会根据DN与客户端的距离进行排序
+    Inputstream找到有block的DN，建立数据流管道，从DN中读取信息
+    当读取到block的末尾时，inputstream会关闭对这个DN的连接，由于getBlockLocation不会一次返回所有block的信息，所以inputstream需要再次对NN发出getBlockLocation的请求，再与下一个DN建立连接
+    当客户端读文件完毕后，调用close方法，结束文件的读取
+    如果在读取过程中，有一个DN挂了，客户端会尝试向下一个DN获取这个block的信息，不会再做无用的尝试
+    DN返回的应答包除了block的内容，还包括检验和，客户端会对检验和进行(?拿什么进行检验)校验，如果发现不一致，会报告给NN，并向下一个DN获取数据
+
+2.HDFS的写流程
+
+    客户端向DFS发出create的请求
+    DFS为客户端创建DfsOutputStream，并调用ClientProtocol的create方法向NN发出在命名空间创建文件的请求，NN对文件进行验证操作，例如客户端是否有权限创建等等，若验证成功则创建一个文件，并把创建文件的操作写入edit log。
+    客户端将文件分成block，调用DfsOutputstream的write方法，DfsOutputStream调用ClientProtocol的addBlock方法请求添加block，NN为block分配对应的DN，返回包含DN位置和版本号的LocatedBlock对象给DFSOutputStream
+    DFSOutputStream创建了一个队列，将需要写入的数据放进队列里，连接所需的DN，建立数据流管道。
+    DFSOutputStream向第一个DN写入数据，第一个DN写入完成后，向下一个DN传递，以此类推，最后一个DN写完数据后，向前一个DN发送应答包，表示已经写入完成，前一个DN再向其前面的DN发送应答包，第一个DN向DFSOutputStream发送应答，表示写入成功。同时数据流管道的所有DN在写入成功后都调用DatanodeProtocol的blockReceived方法向NN汇报
+    当DFSOutputStream收到应答包时会将写入的数据从队列中移除，如果队列中还有数据，则继续调用ClientProtocol的addBlock，重复以上操作
+    当客户端调用DFSOutputStream的close方法时，表示数据写入完成，再没有其他数据写入了，此时DFSOutputStream若收到了所有的应答包，则调用ClientProtocol的complete方法关闭文件，结束正常的写入操作
+    假设其中一个DN在写入过程中发生错误，DFSOutputStream迟迟没有收到应答，则认为此DN写入失败，会将没有收到应答包的block重新加入队列，并向NN报告
+    DFSOutputStream会将block的版本号加1，当DN恢复后会发现数据失效。
+    DFSOutputStream重新向数据流管道写入数据。如果block的副本数没有达到规定的最小副本数，NN会在之后进行复制副本的操作
+
+

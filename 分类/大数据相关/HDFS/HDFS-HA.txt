@@ -1,0 +1,1 @@
+Hadoop NameNode 的 HA，主备切换实现原理，日志同步原理，QJM 中用到的分布式一致性算法（就是paxos算法）

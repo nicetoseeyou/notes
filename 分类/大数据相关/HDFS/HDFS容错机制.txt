@@ -1,0 +1,29 @@
+
+1.HDFS写入数据时发生故障如何处理？（分三种情况，客户端down掉，DataNode down掉，namenode down掉）
+
+    客户端down掉
+
+        客户端和Namenode之间存在租约关系，客户端在写入数据的时候，需要定期向NN发送更新租约的请求，租约的内容是哪个client正在打开那个文件，租约的内容记录edit log里
+        如果客户端长期不更新租约，则NN认为它挂了，但还会保留其租约一段时间
+        当客户端恢复后，可以向NN发出恢复租约的请求，即可继续将数据写入文件
+
+    Datanode挂
+
+        如果Datanode挂了，有可能是客户端在传输数据给这个DN的时候发现它挂了，这时由客户端向NN report bad block，也有可能是另一个DN再向这个DN传输数据时发现它挂了，由DN 向NN report bad block
+        无论是DN还是Client发现的，都会将挂了的DN信息发送给NN，NN会返回其他的DN
+        Client就会绕过这个DN
+
+    Namenone挂
+
+        Zookeeper上此Namenode的临时节点被删除
+        standby namenode由ZkFailoverController将standby的namenode切换成active的，由standby Namenode提供服务
+
+
+2.讲一下HDFS是如何容错，存储信息的，如果用户想hdfs写入数据，请讲一下整个写入的过程
+
+    容错
+        Datanode会定期给NN发送心跳，当有一个DN隔一段时间没有发送时，NN就意识到DN挂了，NN会标记这个DN，并且根据这个DN上的block信息，将其他DN上同样的block复制到健康的DN中
+        如果在写入过程中，DN挂了，数据流管道会关闭，客户端中的流对象会将已经发出的但没有得到回应的数据块重新添加到队列中，并且将健康的DN上的数据块版本号加一，这样当失败的DN重新恢复后只有部分数据的副本就会失效，同时通知NN。客户端中的流会重新开启数据流管道，重新往正常工作的DN写入数据.文件关闭后，NN会发现当前block的副本数没有达到系统指定的最小副本数，就会重新分配DN，复制副本到新的DN
+
+3.在向HDFS中写数据的时候，当写某一个副本的时候出错怎么处理？
+

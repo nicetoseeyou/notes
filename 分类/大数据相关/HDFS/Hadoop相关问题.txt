@@ -1,0 +1,100 @@
+Fsimage与EditLog？
+
+Fsimage 与 EditLog 合并过程？
+
+HDFS的安全模式
+
+HDFS 工具?
+
+HDFS 中在 clientProtocol 中出现的基本概念的抽象？
+
+HDFS clientProtocol接口
+
+HDFS ClientDataNodeProtocol接口
+
+HDFS DataNodeProtocol接口
+
+HDFS InterDataNodeProtocol接口
+
+HDFS NameNodeProtocol接口
+
+HDFS 读数据与写数据
+
+HDFS 源码实现中有哪些优化？
+
+HDFS 数据节点目录结构
+
+HDFS数据节点的实现
+
+DataNode流式接口的实现？
+
+DataRceiver处理读请求？
+
+DataRceiver处理写请求？
+
+HDFS 写入过程的几种可能？
+
+HDFS 写入过程 DataNode 出错如何处理（具体过程）？
+
+HDFS 写入过程客户端崩溃怎么处理？
+
+HDFS DataNode升级过程？
+
+HDFS中的 distcp 与 fastcp?
+
+Hadoop 中输入切片 inputsplit？
+
+HDFS NameNode的 HA 的实现？
+
+简述联邦 HDFS
+
+Hadoop 如何实现全局排序
+
+HDFS 什么时候会出现副本数量多于设定值得情况？
+
+HDFS 如何添加和撤销数据节点
+
+切片？如何避免切片？
+
+HDFS上的副本时怎么放置的？
+
+HDFS的一致性模型
+
+简述 Sqoop
+
+Hadoop NameNode 源码
+
+HDFS的 NameNode 目录树（NameNode的第一关系管理）？
+
+HDFS NameNode 保存镜像文件之后，读取镜像文件时，如何判断是目录还是文件。
+
+HDFS NameNode 的数据块和数据节点管理（第二关系管理）
+
+HDFS 数据块副本状态的管理（主要是 FSNameSystem ）（携程）
+
+HDFS 有一个数据块损坏如何处理？
+
+HDFS 有一个数据块，如何知道其副本的情况呢（携程）
+
+客户端在写入数据时只写入一个数据块，如何处理（携程）
+
+HDFS 块的复制？（携程）
+
+HDFS 写入的过程？（携程）
+
+HDFS 里面怎么建立三副本的过程？（携程）
+
+HDFS 删除多余副本的过程(源码)？（携程一面、三面均被问到，CVTE一面问到）
+
+HDFS 数据块复制时目的节点的选择原则(源码)？
+
+HDFS 删除一个文件的过程(源码)？（携程）
+
+DataNode 删除一个数据块的过程(源码)？（携程）
+
+HDFS 客户端删除一个文件是同步还是异步的(源码)？（携程）
+
+NameNode 中对于数据块的管理(增删改查)
+
+NameNode 中对于数据节点的管理（携程）？
+

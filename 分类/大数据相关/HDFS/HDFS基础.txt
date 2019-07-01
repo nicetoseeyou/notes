@@ -1,0 +1,13 @@
+1. 为什么 HDFS 中的 block 默认大小为64M？
+
+    较大的 block 大小可以减少寻道时间，使得寻道时间小于磁盘传输时间，提高吞吐率
+    可以减少 NameNode 对 block 管理的开销
+    为什么不设置太大呢？因为 MR 里的 Map 任务是以 block 为单位执行的，若 block 越大，Map 任务就越少，MR 的效率会很低
+
+2. MapReduce的任务如何和HDFS结合起来？
+
+    在MR任务中，一开始由 RecordReader 读取HDFS上的文件，HDFS以Block为单位存储，是物理上的概念，而 RecordReader 以 InputSplit 为单位读取，InputSplit 是逻辑上的概念，因为在HDFS上一条记录有可能存储在不同的 block 上，InputSplit 负责将这些记录读取出来
+    RecordReader 读取 InputSplit 后，再将记录解析成 InputFormat 交给 map 任务处理
+    Map 任务的中间结果没有存放在 HDFS，而是在本地文件系统，因为只是中间结果，没必要进行多副本复制
+    Map 任务通过 partitoner 的计算得出数据的 reducer，再通过 shuffle 将记录传输给相应的 reducer
+    Reducer 将最终结果输出到 HDFS
