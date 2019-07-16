@@ -1,6 +1,6 @@
-Fsimage与EditLog？
+fsimage与edits log？
 
-Fsimage 与 EditLog 合并过程？
+fsimage 与 edits log 合并过程？
 
 HDFS的安全模式
 
@@ -24,7 +24,7 @@ HDFS 源码实现中有哪些优化？
 
 HDFS 数据节点目录结构
 
-HDFS数据节点的实现
+HDFS 数据节点的实现
 
 DataNode流式接口的实现？
 
