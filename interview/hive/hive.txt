@@ -1,0 +1,99 @@
+Hive
+1. metastore 存储元数据
+
+2. 读时模式 写时模式
+写时模式（schema on write）
+在传统数据库里面，表的模式是在数据加载时强制确定的。如果加载时发现数据不符合模式，则拒绝加载数据。因为数据是在写数据库时对照模式进行检查。
+读时模式（schema on read）
+Hive 对数据的验证不在加载数据时进行，而在查询时进行
+
+3. 托管表和外部表
+托管表 - 在创建表的时候，Hive 负责管理数据，把数据移入 Hive 的仓库目录（warehouse directory）。在执行 DROP TABLE 的时候，同时删除 metastore 的元数据和 Hive 管理的数据
+
+CREATE TABLE managed_table （dummy STRING）;
+LOAD DATA INPATH '/user/hadoop/data.txt' INTO table managed_table;
+
+这里 LOAD 是一个移动操作，把文件从 hdfs://user/hadoop/data.txt 移动到 Hive managed_table 的仓库目录（warehouse directory）hdfs://user/hive/warehouse/managed_table
+
+外部表
+由用户来控制数据的创建和删除
+
+CREATE EXTERNAL TABLE external_table (dummy STRING)
+ LOCATION '/user/hadoop/external_table';
+LOAD DATA INPATH '/user/hadoop/data.txt' INTO TABLE external_table;
+
+使用 EXTERNAL 关键字之后， Hive 不会把数据移到仓库目录，在定义表时，甚至不会去检查这个外部位置是否存在。执行 DROP TABLE 时，Hive 只删除元数据。
+
+4. 分区（partition）和桶（bucket）
+分区是在创建表的时候用 PARTITION BY 子语句定义的（在创建表后可以使用 ALTER TABLE 语句来增加或移除分区），该子句需要定义列的列表。
+
+CREATE TABLE logs (ts BIGINT, line STRING)
+ PARTITION BY (dt STRING, country STRING);
+
+加载数据要显式指定分区值
+
+LOAD DATA LOCAL INPATH 'input/hive/partitions/file_1'
+ INTO TABLE logs
+ PARTITION (dt='2019-06-25', country='GB');
+
+在文件系统级别，分区只是表目录下嵌套的子目录。
+/user/hive/warehouse/logs
+  |--dt=2019-06-25/
+  |   |--country=GB
+  |   |   |---file_1
+  |   |   |___file_2
+  |   |--country=US
+  |   |   |___file_3
+  |
+  |__dt=2019-06-26
+      |--country=GB
+      |   |___file_4
+	  |__country=US
+	      |---file_5
+		  |___file_6
+
+可以用 SHOW PARTITIONS 查看表的所有分区。
+PARTITION BY 子句中的列定义是表中正式的列，称为分区列（partition column）。但是，数据文件中不包含这些列的值，它们源于目录名。
+可以在 SELECT 语句中以通常的方式使用分区列，Hive 会对输入进行修剪，从而之扫描相关的分区。
+
+SELECT ts, dt, line
+FROM logs
+WHERE country='GB';
+
+桶（bucket）的好处
+a. 获得更高的查询处理效率。桶为表加上了额外的结构。连接两个包含连接列的相同列上划分了桶的表，可以使用 map 端连接（map-side join）高效实现。
+b. 使采样（sampling）更高效。
+
+使用 CLUSTER BY 子句来指定划分桶的列和要划分的桶的个数。
+
+CREATE TABLE bucket_users (id INT, name STRING)
+CLUSTER BY (id) INTO 4 BUCKETS;
+
+排序桶
+
+CREATE TABLE bucket_users (id INT, name STRING)
+CLUSTER BY (id) SORTED BY (id ASC) INTO 4 BUCKETS;
+
+没有划分桶的表users要向分桶后的表填充成员
+hive.enforce.bucketing=true
+INSERT OVERWRITE TABLE bucket_users
+SELECT * FROM users;
+
+5. 表的丢弃
+DROP TABLE 用于删除表的数据和元数据。如果是外部表，只删除元数据，数据不受影响。
+TRUNCATE TABLE 删除表内数据，保留表定义。无法删除外部表（只能dfs -rmr）或者用 LIKE 关键字创建一个一模一样的新表。
+CREATE TABLE new_table LIKE existing_table;
+
+6. 排序和聚集
+ORDER BY 全排序
+SORT BY 为每个 reducer 进行排序
+DISTRIBUTE BY 指定特定的行到 reducer
+
+SELECT year, temperature
+FROM records
+DISTRIBUTE BY year
+SORT BY year ASC, temperature DESC;
+根据年份和气温排序并把相同年份的行输出到同一个reducer
+
+如果 SORT BY 和 DISTRIBUTE BY 中所用的列相同，可以用 CLUSTER BY
+
